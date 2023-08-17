@@ -64,4 +64,17 @@ public class CityRepository : ICityRepository
             throw ex;
         }
     }
+
+    public IEnumerable<CityEntity> GetList()
+    {
+        try
+        {
+            return _dataContext.Cities.ToList() 
+                   ?? throw new NotFoundException("Cities not found");
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
 }

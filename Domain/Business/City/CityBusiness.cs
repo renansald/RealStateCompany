@@ -5,7 +5,7 @@ using Domain.Validation;
 
 namespace Domain.Business.City;
 
-public class CityBusiness : IBusinessBase<CityDTO>
+public class CityBusiness : ICityBusiness
 {
     private readonly ICityRepository _cityRepository;
 
@@ -70,5 +70,18 @@ public class CityBusiness : IBusinessBase<CityDTO>
             throw ex;
         }
 
+    }
+
+    public List<CityDTO> GetList()
+    {
+        try
+        {
+            var citiesEntity = _cityRepository.GetList();
+            return citiesEntity.ConvetToListDto();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }

@@ -12,6 +12,6 @@ public static class Injections
     public static void ConfigureService(this IServiceCollection service)
     {
         service.AddScoped<ICityRepository, CityRepository>();
-        service.AddScoped<IBusinessBase<CityDTO>, CityBusiness>();
+        service.AddScoped<ICityBusiness, CityBusiness>();
     }
 }

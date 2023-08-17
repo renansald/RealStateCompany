@@ -10,10 +10,10 @@ namespace RealStateCompany.Controllers
     [Route("/api/[controller]")]
     public class City : ControllerBase
     {
-        private readonly IBusinessBase<CityDTO> _cityBusiness;
+        private readonly ICityBusiness _cityBusiness;
         private readonly ILogger<City> _logger;
 
-        public City(IBusinessBase<CityDTO> cityBusiness, ILogger<City> logger)
+        public City(ICityBusiness cityBusiness, ILogger<City> logger)
         {
             _cityBusiness = cityBusiness;
             _logger = logger;
@@ -109,6 +109,25 @@ namespace RealStateCompany.Controllers
             {
                 _logger.LogError(ex, ex.Message);
                 return StatusCode(500, "Error on update city");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetList()
+        {
+            try
+            {
+                var cities = _cityBusiness.GetList();
+                return Ok(cities);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest();
             }
         }
     }

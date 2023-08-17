@@ -1,5 +1,6 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
+using System.Linq;
 
 namespace Domain.Business.City;
 
@@ -21,5 +22,10 @@ public static class Mapper
             Id = city.Id,
             Name = city.Name
         };
+    }
+
+    public static List<CityDTO> ConvetToListDto(this IEnumerable<CityEntity> cities)
+    {
+        return cities.Select(x => x.ConvertToDTO()).ToList();
     }
 }
