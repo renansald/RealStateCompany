@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Exceptions\" />
+    <Folder Include="Validation\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

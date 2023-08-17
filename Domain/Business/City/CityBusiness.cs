@@ -1,6 +1,7 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Repositories;
+using Domain.Validation;
 
 namespace Domain.Business.City;
 
@@ -17,6 +18,8 @@ public class CityBusiness : IBusinessBase<CityDTO>
     {
         try
         {
+            item.CreateCityValidation();
+
             var cityEntity = item.ConvertFromDTO();
             
             return _cityRepository.Create(cityEntity); ;
@@ -31,6 +34,7 @@ public class CityBusiness : IBusinessBase<CityDTO>
     {
         try
         {
+            item.UpdateCityValidation();
             var cityEntity = item.ConvertFromDTO();
             _cityRepository.Update(cityEntity);
         }
@@ -44,6 +48,7 @@ public class CityBusiness : IBusinessBase<CityDTO>
     {
         try
         {
+            id.IdValidation();
             _cityRepository.DeleteById(id);
         }
         catch (Exception ex)
@@ -56,6 +61,7 @@ public class CityBusiness : IBusinessBase<CityDTO>
     {
         try
         {
+            id.IdValidation();
             var city = _cityRepository.GetById(id);
             return city.ConvertToDTO();
         }

@@ -1,6 +1,7 @@
 using System.Net;
 using Domain.Business.Interfaces;
 using Domain.DTOs;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RealStateCompany.Controllers
@@ -27,11 +28,20 @@ namespace RealStateCompany.Controllers
                 {
                     return BadRequest("Invalid Id parameter");
                 }
+
                 return Ok(_cityBusiness.GetById(id));
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogTrace(ex, ex.Message);
                 return StatusCode(500);
             }
         }
@@ -49,9 +59,17 @@ namespace RealStateCompany.Controllers
                 _cityBusiness.Delete(id);
                 return Ok();
             }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500, "Error on delete city");
             }
         }
@@ -64,9 +82,13 @@ namespace RealStateCompany.Controllers
                 var id = _cityBusiness.Create(city);
                 return StatusCode(201, new { Id = id });
             }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500, "Error on create city");
             }
         }
@@ -79,9 +101,13 @@ namespace RealStateCompany.Controllers
                 _cityBusiness.Update(city);
                 return Ok();
             }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500, "Error on update city");
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ public class CityRepository : ICityRepository
     public CityEntity GetById(int id)
     {
         var city = _dataContext.Cities.Find(id) 
-                ?? throw new Exception("Not Found");
+                ?? throw new NotFoundException("City not found");
         return city;
     }
 
@@ -25,7 +26,7 @@ public class CityRepository : ICityRepository
         try
         {
             var city = _dataContext.Cities.Find(id)
-                       ?? throw new Exception("City doesn't exist on database");
+                       ?? throw new NotFoundException("City doesn't exist on database");
             _dataContext.Cities.Remove(city);
             _dataContext.SaveChanges();
         }
