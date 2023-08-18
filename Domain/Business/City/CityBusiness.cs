@@ -1,7 +1,6 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Repositories;
-using Domain.Validation;
 
 namespace Domain.Business.City;
 
@@ -16,72 +15,31 @@ public class CityBusiness : ICityBusiness
 
     public async Task<int> Create(CityDTO item)
     {
-        try
-        {
-            item.CreateCityValidation();
+        var cityEntity = item.ConvertFromDTO();
 
-            var cityEntity = item.ConvertFromDTO();
-            
-            return await _cityRepository.Create(cityEntity); ;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        return await _cityRepository.Create(cityEntity); ;
     }
 
     public async Task Update(CityDTO item)
     {
-        try
-        {
-            item.UpdateCityValidation();
-            var cityEntity = item.ConvertFromDTO();
-            _cityRepository.Update(cityEntity);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        var cityEntity = item.ConvertFromDTO();
+        await _cityRepository.Update(cityEntity);
     }
 
     public async Task Delete(int id)
     {
-        try
-        {
-            id.IdValidation();
-            await _cityRepository.DeleteById(id);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        await _cityRepository.DeleteById(id);
     }
 
     public async Task<CityDTO> GetById(int id)
     {
-        try
-        {
-            id.IdValidation();
-            var city = await _cityRepository.GetById(id);
-            return city.ConvertToDTO();
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-
+        var city = await _cityRepository.GetById(id);
+        return city.ConvertToDTO();
     }
 
     public async Task<List<CityDTO>> GetList()
     {
-        try
-        {
-            var citiesEntity = await _cityRepository.GetList();
-            return citiesEntity.ConvertToListDto();
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        var citiesEntity = await _cityRepository.GetList();
+        return citiesEntity.ConvertToListDto();
     }
 }

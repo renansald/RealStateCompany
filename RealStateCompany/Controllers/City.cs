@@ -2,12 +2,14 @@ using System.Net;
 using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RealStateCompany.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
+    [Authorize(Roles="Admin, User")]
     public class City : ControllerBase
     {
         private readonly ICityBusiness _cityBusiness;
@@ -20,6 +22,7 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpGet("{id}")]
+
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -42,6 +45,7 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -66,6 +70,7 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CityDTO city)
         {
             try
@@ -85,6 +90,7 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromBody] CityDTO city)
         {
             try
