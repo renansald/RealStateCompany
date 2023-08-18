@@ -14,21 +14,21 @@ public class CityRepository : ICityRepository
     {
         _dataContext = dataContext;
     }
-    public CityEntity GetById(int id)
+    public async Task<CityEntity> GetById(int id)
     {
-        var city = _dataContext.Cities.Find(id) 
+        var city = await _dataContext.Cities.FindAsync(id) 
                 ?? throw new NotFoundException("City not found");
         return city;
     }
 
-    public void DeleteById(int id)
+    public async Task DeleteById(int id)
     {
         try
         {
-            var city = _dataContext.Cities.Find(id)
+            var city = await _dataContext.Cities.FindAsync(id)
                        ?? throw new NotFoundException("City doesn't exist on database");
             _dataContext.Cities.Remove(city);
-            _dataContext.SaveChanges();
+            await _dataContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -36,13 +36,13 @@ public class CityRepository : ICityRepository
         }
     }
 
-    public int? Create(CityEntity entity)
+    public async Task<int> Create(CityEntity entity)
     {
         try
         {
-            _dataContext.Cities.Add(entity);
+            await _dataContext.Cities.AddAsync(entity);
             
-            _dataContext.SaveChanges();
+            await _dataContext.SaveChangesAsync();
             
             return entity.Id;
         }
@@ -52,12 +52,12 @@ public class CityRepository : ICityRepository
         }
     }
 
-    public void Update(CityEntity entity)
+    public async Task Update(CityEntity entity)
     {
         try
         {
             _dataContext.Entry(entity).State = EntityState.Modified;
-            _dataContext.SaveChanges();
+            await _dataContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -65,11 +65,11 @@ public class CityRepository : ICityRepository
         }
     }
 
-    public IEnumerable<CityEntity> GetList()
+    public async Task<IEnumerable<CityEntity>> GetList()
     {
         try
         {
-            return _dataContext.Cities.ToList() 
+            return await _dataContext.Cities.ToListAsync() 
                    ?? throw new NotFoundException("Cities not found");
         }
         catch (Exception ex)

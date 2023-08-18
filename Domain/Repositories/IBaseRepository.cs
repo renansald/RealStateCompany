@@ -2,8 +2,8 @@
 
 public interface IBaseRepository<T>
 {
-    public T? GetById(int id);
-    public void DeleteById(int id);
-    public int? Create(T entity);
-    public void Update(T entity);
+    public Task<T> GetById(int id);
+    public Task DeleteById(int id);
+    public Task<int> Create(T entity);
+    public Task Update(T entity);
 }

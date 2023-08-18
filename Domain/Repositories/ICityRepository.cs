@@ -4,5 +4,5 @@ namespace Domain.Repositories;
 
 public interface ICityRepository : IBaseRepository<CityEntity>
 {
-    public IEnumerable<CityEntity> GetList();
+    public Task<IEnumerable<CityEntity>> GetList();
 }

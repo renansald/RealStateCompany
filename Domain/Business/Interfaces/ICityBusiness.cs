@@ -4,5 +4,5 @@ namespace Domain.Business.Interfaces;
 
 public interface ICityBusiness : IBusinessBase<CityDTO>
 {
-    List<CityDTO> GetList();
+    Task<List<CityDTO>> GetList();
 }

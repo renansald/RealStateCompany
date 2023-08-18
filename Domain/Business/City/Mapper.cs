@@ -24,7 +24,7 @@ public static class Mapper
         };
     }
 
-    public static List<CityDTO> ConvetToListDto(this IEnumerable<CityEntity> cities)
+    public static List<CityDTO> ConvertToListDto(this IEnumerable<CityEntity> cities)
     {
         return cities.Select(x => x.ConvertToDTO()).ToList();
     }

@@ -20,16 +20,11 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                if (id <= 0)
-                {
-                    return BadRequest("Invalid Id parameter");
-                }
-
-                return Ok(_cityBusiness.GetById(id));
+                return Ok(await _cityBusiness.GetById(id));
             }
             catch (BadRequestException ex)
             {
@@ -41,22 +36,18 @@ namespace RealStateCompany.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogTrace(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500);
             }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                if (id <= 0)
-                {
-                    return BadRequest();
-                }
 
-                _cityBusiness.Delete(id);
+                await _cityBusiness.Delete(id);
                 return Ok();
             }
             catch (BadRequestException ex)
@@ -75,11 +66,11 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CityDTO city)
+        public async Task<IActionResult> Create([FromBody] CityDTO city)
         {
             try
             {
-                var id = _cityBusiness.Create(city);
+                var id = await _cityBusiness.Create(city);
                 return StatusCode(201, new { Id = id });
             }
             catch (BadRequestException ex)
@@ -94,11 +85,11 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] CityDTO city)
+        public async Task<IActionResult> Update([FromBody] CityDTO city)
         {
             try
             {
-                _cityBusiness.Update(city);
+                await _cityBusiness.Update(city);
                 return Ok();
             }
             catch (BadRequestException ex)
@@ -113,11 +104,11 @@ namespace RealStateCompany.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
             try
             {
-                var cities = _cityBusiness.GetList();
+                var cities = await _cityBusiness.GetList();
                 return Ok(cities);
             }
             catch (NotFoundException ex)

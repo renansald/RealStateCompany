@@ -14,7 +14,7 @@ public class CityBusiness : ICityBusiness
         _cityRepository = cityRepository;
     }
 
-    public int? Create(CityDTO item)
+    public async Task<int> Create(CityDTO item)
     {
         try
         {
@@ -22,7 +22,7 @@ public class CityBusiness : ICityBusiness
 
             var cityEntity = item.ConvertFromDTO();
             
-            return _cityRepository.Create(cityEntity); ;
+            return await _cityRepository.Create(cityEntity); ;
         }
         catch (Exception ex)
         {
@@ -30,7 +30,7 @@ public class CityBusiness : ICityBusiness
         }
     }
 
-    public void Update(CityDTO item)
+    public async Task Update(CityDTO item)
     {
         try
         {
@@ -44,12 +44,12 @@ public class CityBusiness : ICityBusiness
         }
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
         try
         {
             id.IdValidation();
-            _cityRepository.DeleteById(id);
+            await _cityRepository.DeleteById(id);
         }
         catch (Exception ex)
         {
@@ -57,12 +57,12 @@ public class CityBusiness : ICityBusiness
         }
     }
 
-    public CityDTO GetById(int id)
+    public async Task<CityDTO> GetById(int id)
     {
         try
         {
             id.IdValidation();
-            var city = _cityRepository.GetById(id);
+            var city = await _cityRepository.GetById(id);
             return city.ConvertToDTO();
         }
         catch (Exception ex)
@@ -72,12 +72,12 @@ public class CityBusiness : ICityBusiness
 
     }
 
-    public List<CityDTO> GetList()
+    public async Task<List<CityDTO>> GetList()
     {
         try
         {
-            var citiesEntity = _cityRepository.GetList();
-            return citiesEntity.ConvetToListDto();
+            var citiesEntity = await _cityRepository.GetList();
+            return citiesEntity.ConvertToListDto();
         }
         catch (Exception ex)
         {
