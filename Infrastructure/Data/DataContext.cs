@@ -11,4 +11,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<CityEntity> Cities { get; set; }
+
+    public DbSet<UserEntity> Users { get; set; }
 }
