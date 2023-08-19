@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -75,6 +76,24 @@ public class UserRepository : IUserRepository
         user.PasswordKey = passwordConfig["passwordKey"];
 
         _dataContext.Entry(user).State = EntityState.Modified;
+        await _dataContext.SaveChangesAsync();
+    }
+
+    public async Task Delete(int id, string password)
+    {
+        if (!(await IsUserAlreadyRegistered(id)))
+        {
+            throw new BadRequestException("This user doesn't exist");
+        }
+
+        var user = _dataContext.Users.FirstOrDefault(x => x.Id.Equals(id));
+
+        if (!IsPasswordMatch(password, user.Password, user.PasswordKey))
+        {
+            throw new BadRequestException("User doesn't match");
+        }
+
+        _dataContext.Users.Remove(user);
         await _dataContext.SaveChangesAsync();
     }
 

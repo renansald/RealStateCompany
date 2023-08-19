@@ -90,5 +90,25 @@ namespace API.Controllers
                     });
             }
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int id, [FromBody] string password)
+        {
+            try
+            {
+                await _userBusiness.Delete(id, password);
+                return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, new { message = "Error on delete user" });
+            }
+        }
     }
 }

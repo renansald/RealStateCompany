@@ -44,14 +44,9 @@ public class UserBusiness : IUserBusiness
         await _userRepository.Update(userEntity, item.Password);
     }
 
-    public Task Delete(int id)
+    public async Task Delete(int id, string password)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<UserDTO> GetById(int id)
-    {
-        throw new NotImplementedException();
+        await _userRepository.Delete(id, password);
     }
 
     public async Task<AuthenticationDTO> Authentication(string email, string password)

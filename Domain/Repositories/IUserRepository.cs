@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<bool> IsUserAlreadyRegistered(string email);
     Task<bool> IsUserAlreadyRegistered(int id);
     Task Update(UserEntity user, string password);
+    Task Delete(int id, string password);
 }
