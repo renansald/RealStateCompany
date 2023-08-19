@@ -32,9 +32,16 @@ public class UserBusiness : IUserBusiness
             password: item.Password, role: item.Role);
     }
 
-    public Task Update(UserDTO item)
+    public async Task Update(UserDTO item)
     {
-        throw new NotImplementedException();
+        if (!(await _userRepository.IsUserAlreadyRegistered(item.Id)))
+        {
+            throw new BadRequestException("This user doesn't exist");
+        }
+
+        var userEntity = item.ConvertFromDto();
+
+        await _userRepository.Update(userEntity, item.Password);
     }
 
     public Task Delete(int id)

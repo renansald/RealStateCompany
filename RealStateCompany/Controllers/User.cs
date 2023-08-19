@@ -1,6 +1,7 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -56,6 +57,37 @@ namespace API.Controllers
             {
                 _logger.LogError(ex, ex.Message);
                 return StatusCode(500, new { message = "Internal server error" });
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser(int id,
+            [FromBody] UserDTO user)
+        {
+            try
+            {
+                if (!user.Id.Equals(id))
+                {
+                    throw new BadRequestException("Invalid id");
+                }
+
+                await _userBusiness.Update(user);
+
+                return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, 
+                    new
+                    {
+                        message = "Internal server error on Update"
+                    });
             }
         }
     }

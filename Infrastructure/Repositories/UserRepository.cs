@@ -17,31 +17,21 @@ public class UserRepository : IUserRepository
 
     public async Task<int> Create(string name, string email, string password, string role)
     {
-        try
+        var passwordDict = CreatePasswordKeyAndHash(password);
+
+        var user = new UserEntity
         {
+            Email = email,
+            Password = passwordDict["passwordHash"],
+            PasswordKey = passwordDict["passwordKey"],
+            Name = name,
+            Role = role
+        };
 
-            using var hmac = new HMACSHA512();
-            var passwordKey = hmac.Key;
-            var passwordHash = hmac.ComputeHash(
-                System.Text.Encoding.UTF8.GetBytes(password));
-
-            var user = new UserEntity
-            {
-                Email = email,
-                Password = passwordHash,
-                PasswordKey = passwordKey,
-                Name = name,
-                Role = role
-            };
-
-            await _dataContext.Users.AddAsync(user);
-            await _dataContext.SaveChangesAsync();
-            return user.Id;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        await _dataContext.Users.AddAsync(user);
+        await _dataContext.SaveChangesAsync();
+        return user.Id;
+        
     }
 
     public async Task<UserEntity> Authentication(string email, string password)
@@ -69,6 +59,34 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> IsUserAlreadyRegistered(string email)
     {
-        return await _dataContext.Users.AnyAsync(x => x.Email == email);
+        return await _dataContext.Users.AnyAsync(x => x.Email.Equals(email));
+    }
+
+    public async Task<bool> IsUserAlreadyRegistered(int id)
+    {
+        return await _dataContext.Users.AnyAsync(x => x.Id.Equals(id));
+    }
+
+    public async Task Update(UserEntity user, string password)
+    {
+        var passwordConfig = CreatePasswordKeyAndHash(password);
+
+        user.Password = passwordConfig["passwordHash"];
+        user.PasswordKey = passwordConfig["passwordKey"];
+
+        _dataContext.Entry(user).State = EntityState.Modified;
+        await _dataContext.SaveChangesAsync();
+    }
+
+    private Dictionary<string, byte[]> CreatePasswordKeyAndHash(string password)
+    {
+        var hash = new Dictionary<string, byte[]>();
+        
+        using var hmac = new HMACSHA512();
+        hash.Add("passwordKey", hmac.Key);
+        hash.Add("passwordHash", hmac.ComputeHash(
+            System.Text.Encoding.UTF8.GetBytes(password)));
+
+        return hash;
     }
 }

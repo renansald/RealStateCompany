@@ -7,11 +7,21 @@ public static class Mapper
 {
     public static UserDTO ConvertToDto(this UserEntity user)
     {
-        return new UserDTO()
+        return new UserDTO
         {
             Name = user.Name,
             Id = user.Id,
-            Password = null
+        };
+    }
+
+    public static UserEntity ConvertFromDto(this UserDTO user)
+    {
+        return new UserEntity
+        {
+            Email = user.Email,
+            Id = user.Id,
+            Name = user.Name,
+            Role = user.Role
         };
     }
 }
