@@ -2,9 +2,10 @@
 
 namespace Domain.Repositories;
 
-public interface IUserRepository : IBaseRepository<UserEntity>
+public interface IUserRepository
 {
+    Task<int> Create(string name, string email, string password, string role);
+    Task<UserEntity> Authentication(string email, string password);
+    Task<bool> IsUserAlreadyRegistered(string email);
 
-    Task<UserEntity> Authentication(string user, string password);
-    
 }

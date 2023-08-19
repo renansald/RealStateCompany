@@ -12,9 +12,13 @@ public class UserEntity
     public string Name { get; set; }
 
     [Required]
-    [StringLength(20, MinimumLength = 8)]
-    [RegularExpression("^(?=.*[A-Z])(?=.*[.*@!#^&(){}[]\\-$*_+|:;<>,.?~])(.{8,})$")]
-    public string Password { get; set; }
+    public string Email { get; set; }
+
+    [Required]
+    public byte[] Password { get; set; }
+
+    public byte[] PasswordKey { get; set; }
     
     public string Role { get; set; }
+
 }

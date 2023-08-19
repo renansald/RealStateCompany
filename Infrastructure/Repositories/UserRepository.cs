@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using System.Security.Cryptography;
+using Domain.Entities;
 using Domain.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -14,29 +15,60 @@ public class UserRepository : IUserRepository
         _dataContext = dataContext;
     }
 
-    public async Task<UserEntity> GetById(int id)
+    public async Task<int> Create(string name, string email, string password, string role)
     {
-        throw new NotImplementedException();
+        try
+        {
+
+            using var hmac = new HMACSHA512();
+            var passwordKey = hmac.Key;
+            var passwordHash = hmac.ComputeHash(
+                System.Text.Encoding.UTF8.GetBytes(password));
+
+            var user = new UserEntity
+            {
+                Email = email,
+                Password = passwordHash,
+                PasswordKey = passwordKey,
+                Name = name,
+                Role = role
+            };
+
+            await _dataContext.Users.AddAsync(user);
+            await _dataContext.SaveChangesAsync();
+            return user.Id;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
-    public async Task DeleteById(int id)
+    public async Task<UserEntity> Authentication(string email, string password)
     {
-        throw new NotImplementedException();
+        var user = await _dataContext.Users.FirstOrDefaultAsync(
+            x => x.Email == email);
+
+        if (user is null || !IsPasswordMatch(password, 
+                user.Password, user.PasswordKey))
+        {
+            return null;
+        }
+
+        return user;
     }
 
-    public async Task<int> Create(UserEntity entity)
+    private bool IsPasswordMatch(string password, byte[] passwordHash, byte[] passwordKey)
     {
-        throw new NotImplementedException();
+        using var hmac = new HMACSHA512(passwordKey);
+        
+        var passwordEncrypted = hmac.ComputeHash(
+            System.Text.Encoding.UTF8.GetBytes(password));
+        return passwordHash.SequenceEqual(passwordEncrypted);
     }
 
-    public async Task Update(UserEntity entity)
+    public async Task<bool> IsUserAlreadyRegistered(string email)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<UserEntity> Authentication(string user, string password)
-    {
-        return await _dataContext.Users.FirstOrDefaultAsync(
-            x => x.Name == user && x.Password == password);
+        return await _dataContext.Users.AnyAsync(x => x.Email == email);
     }
 }

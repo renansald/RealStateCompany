@@ -4,6 +4,7 @@ using System.Text;
 using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -21,9 +22,14 @@ public class UserBusiness : IUserBusiness
         _configuration = configuration;
     }
 
-    public Task<int> Create(UserDTO item)
+    public async Task<int> Create(UserDTO item)
     {
-        throw new NotImplementedException();
+        if (await _userRepository.IsUserAlreadyRegistered(item.Email))
+        {
+            throw new BadRequestException("User already exists");
+        }
+        return await _userRepository.Create(name: item.Name, email: item.Email,
+            password: item.Password, role: item.Role);
     }
 
     public Task Update(UserDTO item)
@@ -41,10 +47,10 @@ public class UserBusiness : IUserBusiness
         throw new NotImplementedException();
     }
 
-    public async Task<AuthenticationDTO> Authentication(string name, string password)
+    public async Task<AuthenticationDTO> Authentication(string email, string password)
     {
         var user = await _userRepository
-                       .Authentication(user: name, password: password) 
+                       .Authentication(email: email, password: password) 
                         ?? throw new UnauthorizedAccessException(
                             "User not found or password wrong"
                         );

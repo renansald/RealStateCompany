@@ -29,10 +29,6 @@ namespace RealStateCompany.Controllers
             {
                 return Ok(await _cityBusiness.GetById(id));
             }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (NotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
@@ -40,7 +36,7 @@ namespace RealStateCompany.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(500);
+                return StatusCode(500, new {message = "Internal server error"});
             }
         }
 
@@ -54,10 +50,6 @@ namespace RealStateCompany.Controllers
                 await _cityBusiness.Delete(id);
                 return Ok();
             }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
@@ -65,7 +57,7 @@ namespace RealStateCompany.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(500, "Error on delete city");
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
@@ -78,14 +70,10 @@ namespace RealStateCompany.Controllers
                 var id = await _cityBusiness.Create(city);
                 return StatusCode(201, new { Id = id });
             }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(500, "Error on create city");
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
@@ -98,14 +86,10 @@ namespace RealStateCompany.Controllers
                 await _cityBusiness.Update(city);
                 return Ok();
             }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(500, "Error on update city");
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
@@ -124,7 +108,7 @@ namespace RealStateCompany.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest();
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
     }

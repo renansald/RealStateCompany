@@ -13,4 +13,11 @@ public class DataContext : DbContext
     public DbSet<CityEntity> Cities { get; set; }
 
     public DbSet<UserEntity> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UserEntity>()
+            .HasIndex(x => x.Email)
+            .IsUnique();
+    }
 }

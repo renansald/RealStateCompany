@@ -11,7 +11,7 @@ public static class Mapper
         {
             Name = user.Name,
             Id = user.Id,
-            Password = user.Password
+            Password = null
         };
     }
 }

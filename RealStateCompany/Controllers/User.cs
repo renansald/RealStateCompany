@@ -1,5 +1,6 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -18,12 +19,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authentication([FromBody] UserDTO user)
+        public async Task<IActionResult> Authentication([FromBody] LoginDTO user)
         {
             try
             {
                 var userLogged = await _userBusiness
-                    .Authentication(user.Name, user.Password);
+                    .Authentication(user.Email, user.Password);
 
                 return Ok(userLogged);
             }
@@ -36,6 +37,25 @@ namespace API.Controllers
             {
                 _logger.LogError(ex, ex.Message);
                 return StatusCode(500, new {message="Error during authentication"});
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] UserDTO user)
+        {
+            try
+            {
+                var userId = await _userBusiness.Create(user);
+                return StatusCode(201, new { Id = userId });
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
     }
