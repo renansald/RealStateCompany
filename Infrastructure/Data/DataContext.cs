@@ -14,6 +14,14 @@ public class DataContext : DbContext
 
     public DbSet<UserEntity> Users { get; set; }
 
+    public DbSet<PropertyEntity> Properties { get; set; }
+
+    public DbSet<PropertyTypeEntity> PropertyType { get; set; }
+
+    public DbSet<FurnishingTypeEntity> FurnishingType { get; set; }
+
+    public DbSet<PhotosEntity> Photos { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>()
