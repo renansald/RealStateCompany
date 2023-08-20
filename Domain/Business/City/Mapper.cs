@@ -6,7 +6,7 @@ namespace Domain.Business.City;
 
 public static class Mapper
 {
-    public static CityDTO ConvertToDTO(this CityEntity city)
+    public static CityDTO ConvertToDto(this CityEntity city)
     {
         return new CityDTO
         {
@@ -15,7 +15,7 @@ public static class Mapper
         };
     }
 
-    public static CityEntity ConvertFromDTO(this CityDTO city)
+    public static CityEntity ConvertFromDto(this CityDTO city)
     {
         return new CityEntity()
         {
@@ -26,6 +26,6 @@ public static class Mapper
 
     public static List<CityDTO> ConvertToListDto(this IEnumerable<CityEntity> cities)
     {
-        return cities.Select(x => x.ConvertToDTO()).ToList();
+        return cities.Select(x => x.ConvertToDto()).ToList();
     }
 }

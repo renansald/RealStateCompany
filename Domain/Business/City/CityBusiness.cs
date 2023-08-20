@@ -15,14 +15,14 @@ public class CityBusiness : ICityBusiness
 
     public async Task<int> Create(CityDTO item)
     {
-        var cityEntity = item.ConvertFromDTO();
+        var cityEntity = item.ConvertFromDto();
 
         return await _cityRepository.Create(cityEntity); ;
     }
 
     public async Task Update(CityDTO item)
     {
-        var cityEntity = item.ConvertFromDTO();
+        var cityEntity = item.ConvertFromDto();
         await _cityRepository.Update(cityEntity);
     }
 
@@ -34,7 +34,7 @@ public class CityBusiness : ICityBusiness
     public async Task<CityDTO> GetById(int id)
     {
         var city = await _cityRepository.GetById(id);
-        return city.ConvertToDTO();
+        return city.ConvertToDto();
     }
 
     public async Task<List<CityDTO>> GetList()
