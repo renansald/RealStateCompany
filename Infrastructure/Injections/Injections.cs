@@ -5,7 +5,9 @@ using Domain.Business.PropertyType;
 using Domain.Business.User;
 using Domain.DTOs;
 using Domain.Repositories;
+using Domain.Services;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Injections;
@@ -31,5 +33,8 @@ public static class Injections
         service.AddScoped<IPropertyTypeBusiness, PropertyTypeBusiness>();
 
         service.AddScoped<IFurnishingTypeBusiness, FurnishingTypeBusiness>();
+
+        //Blob Storage Service
+        service.AddScoped<IBlobStorageService, BlobStorageService>();
     }
 }

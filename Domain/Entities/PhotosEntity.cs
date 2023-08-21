@@ -9,8 +9,7 @@ public class PhotosEntity
     public int Id { get; set; }
 
     [Required]
-    [MinLength(5)]
-    public string ImageURL { get; set; }
+    public string FileName { get; set; }
 
     [Required] 
     public bool IsPrimary { get; set; } = false;
