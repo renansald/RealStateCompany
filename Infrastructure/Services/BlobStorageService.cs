@@ -1,38 +1,74 @@
-﻿using Azure.Storage;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+using Domain.Exceptions;
+using Azure.Storage.Blobs.Models;
+using Domain.Entities;
 
 namespace Infrastructure.Services;
 
 public class BlobStorageService : IBlobStorageService
 {
-    private readonly BlobContainerClient _blobClient;
+    private readonly BlobContainerClient _blobContainerClient;
 
     public BlobStorageService(IConfiguration configuration)
     {
-        var sextion = configuration.GetSection("BlobContainers:Photos").Value;
-
-        _blobClient = new BlobServiceClient(configuration.GetConnectionString("BlobStorage"))
+        _blobContainerClient = new BlobServiceClient(configuration.GetConnectionString("BlobStorage"))
                 .GetBlobContainerClient(configuration.GetSection("BlobContainers:Photos").Value);
+        
     }
 
-    public async Task<List<string>> Create(List<IFormFile> files, int propertyId)
+    public async Task<IEnumerable<PhotosEntity>> Create(List<IFormFile> files, int propertyId)
     {
-        var urlList = new List<string>();
+        
+        var areThereFiles = files.Select(x =>
+        {
+            var blobName = $@"{propertyId}/{x.FileName}";
+
+            var blobClient = _blobContainerClient.GetBlobClient(blobName);
+
+            if(blobClient.Exists())
+                return x.FileName;
+            return null;
+        }).Where(x => x != null);
+
+        if (areThereFiles.Any())
+        {
+            throw new BadRequestException(
+                $@"There are the following files: {string.Join(", ", areThereFiles)}"
+            );
+        }
+
+        var photosEntity = new List<PhotosEntity>();
         foreach (var file in files)
         {
             var fileName = $@"{propertyId}/{file.FileName}";
+            
             using var memoryStream = new MemoryStream();
+            
+            var blobHttpHeader = new BlobHttpHeaders
+            {
+                ContentType = file.ContentType
+            };
+            
             await file.CopyToAsync(memoryStream);
+            
             memoryStream.Position = 0;
-            await _blobClient.UploadBlobAsync(fileName, memoryStream, default);
-            urlList.Add(_blobClient.Uri.ToString());
+            
+            var blobClient =  _blobContainerClient
+                .GetBlobClient(fileName);
+
+            await blobClient.UploadAsync(memoryStream, blobHttpHeader);
+
+            photosEntity.Add(new PhotosEntity
+            {
+                PropertyId = propertyId,
+                Url = blobClient.Uri.AbsoluteUri.ToString(),
+            });
         }
 
-        return urlList;
+        return photosEntity;
     }
 }
 

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.Services;
 
 public interface IBlobStorageService
 {
-    Task<List<string>> Create(List<IFormFile> files, int propertyId);
-
+    Task<IEnumerable<PhotosEntity>> Create(List<IFormFile> files, int propertyId);
 }

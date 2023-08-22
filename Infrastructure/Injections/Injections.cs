@@ -1,6 +1,7 @@
 ﻿using Domain.Business.City;
 using Domain.Business.FurnishingType;
 using Domain.Business.Interfaces;
+using Domain.Business.Photos;
 using Domain.Business.PropertyType;
 using Domain.Business.User;
 using Domain.DTOs;
@@ -24,6 +25,8 @@ public static class Injections
         service.AddScoped<IPropertyTypeRepository, PropertyTypeRepository>();
 
         service.AddScoped<IFurnishingTypeRepository, FurnishingTypeRepository>();
+
+        service.AddScoped<IPhotosRepository, PhotosRepository>();
         
         //Business Injections
         service.AddScoped<ICityBusiness, CityBusiness>();
@@ -34,7 +37,10 @@ public static class Injections
 
         service.AddScoped<IFurnishingTypeBusiness, FurnishingTypeBusiness>();
 
+        service.AddScoped<IPhotosBusiness, PhotosBusiness>();
+
         //Blob Storage Service
         service.AddScoped<IBlobStorageService, BlobStorageService>();
+
     }
 }

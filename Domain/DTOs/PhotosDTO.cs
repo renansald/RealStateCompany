@@ -1,22 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities;
+namespace Domain.DTOs;
 
-public class PhotosEntity
+public class PhotosDTO
 {
-    [Key]
     public int Id { get; set; }
-
     [Required]
     public string Url { get; set; }
-
-    [Required] 
+    [Required]
     public bool IsPrimary { get; set; } = false;
-
-    [ForeignKey("PropertyEntity")]
+    [Required]
     public int PropertyId { get; set; }
-
-    public PropertyEntity Property { get; set; }
-
+    public string? PhotoUrl { get; set; }
 }
