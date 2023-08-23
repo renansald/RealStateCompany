@@ -27,7 +27,9 @@ public class PhotosBusiness : IPhotosBusiness
 
     public async Task<List<PhotosDTO>> GetPhotos(int propertyId)
     {
-        throw new NotImplementedException();
+        var photosEntity = await _photosRepository.GetListByPropertyId(propertyId);
+        var photosDto = photosEntity.ConvertToDtoList();
+        return photosDto;
     }
 
     public async Task Delete(int photoId)
@@ -35,5 +37,10 @@ public class PhotosBusiness : IPhotosBusiness
         var photo = await _photosRepository.GetById(photoId);
         await _blobStorageService.Delete(photo);
         await _photosRepository.DeleteById(photoId);
+    }
+
+    public async Task SetPrimary(int id)
+    {
+        await _photosRepository.SetPrimary(id);
     }
 }

@@ -27,5 +27,9 @@ public class DataContext : DbContext
         modelBuilder.Entity<UserEntity>()
             .HasIndex(x => x.Email)
             .IsUnique();
+
+        modelBuilder.Entity<PhotosEntity>()
+            .Property(x => x.IsPrimary)
+            .HasDefaultValue(false);
     }
 }

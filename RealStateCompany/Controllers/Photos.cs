@@ -8,7 +8,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-//[Authorize(Roles = "Admin, User")]
+[Authorize(Roles = "Admin, User")]
 public class Photos : ControllerBase
 {
 
@@ -77,6 +77,68 @@ public class Photos : ControllerBase
             return StatusCode(500, new
             {
                 message = "Internal Server Error on Delete Photo"
+            });
+        }
+    }
+
+    [HttpGet("{propertyId}/list")]
+    public async Task<IActionResult> GetPhotos(int propertyId)
+    {
+        try
+        {
+            if (propertyId <= 0)
+            {
+                throw new BadRequestException("Invalid Property Id");
+            }
+
+            var photos = _photosBusiness.GetPhotos(propertyId);
+            return Ok(photos);
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(500, new
+            {
+                message = "Internal Server Error on Get Photos"
+            });
+        }
+    }
+
+    [HttpPatch("{id}/primary")]
+    public async Task<IActionResult> SetPrimary(int id)
+    {
+        try
+        {
+            if (id <= 0)
+            {
+                throw new BadRequestException("Invalid Id");
+            }
+
+            await _photosBusiness.SetPrimary(id);
+            return Ok();
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(500, new
+            {
+                message = "Internal Server Error on Update Primary Photo"
             });
         }
     }

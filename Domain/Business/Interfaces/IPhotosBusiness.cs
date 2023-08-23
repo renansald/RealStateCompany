@@ -11,4 +11,5 @@ public interface IPhotosBusiness
 
     Task Delete(int photoId);
 
+    Task SetPrimary(int id);
 }

@@ -55,4 +55,16 @@ public class PhotosRepository : IPhotosRepository
 
         return photos;
     }
+
+    public async Task SetPrimary(int id)
+    {
+        var entity = await _dataContext.Photos.FindAsync(id)
+                     ?? throw new NotFoundException("This photo doesn't exist");
+
+        entity.IsPrimary = true;
+
+        _dataContext.Entry(entity).State = EntityState.Modified;
+        
+        await _dataContext.SaveChangesAsync();
+    }
 }

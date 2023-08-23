@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
@@ -11,7 +12,8 @@ public class PhotosEntity
     [Required]
     public string Url { get; set; }
 
-    [Required] 
+    [Required]
+    [DefaultValue(false)]
     public bool IsPrimary { get; set; } = false;
 
     [ForeignKey("PropertyEntity")]
