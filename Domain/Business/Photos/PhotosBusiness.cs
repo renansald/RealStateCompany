@@ -32,6 +32,8 @@ public class PhotosBusiness : IPhotosBusiness
 
     public async Task Delete(int photoId)
     {
-        throw new NotImplementedException();
+        var photo = await _photosRepository.GetById(photoId);
+        await _blobStorageService.Delete(photo);
+        await _photosRepository.DeleteById(photoId);
     }
 }

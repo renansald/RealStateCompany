@@ -48,4 +48,36 @@ public class Photos : ControllerBase
             });
         }
     }
+
+    [HttpDelete("{id}/delete")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            if (id <= 0)
+            {
+                throw new BadRequestException("Invalid Id");
+            }
+
+            await _photosBusiness.Delete(id);
+            
+            return Ok();
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(500, new
+            {
+                message = "Internal Server Error on Delete Photo"
+            });
+        }
+    }
 }

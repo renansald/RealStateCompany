@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Blobs;
+﻿using System.Text.RegularExpressions;
+using Azure.Storage.Blobs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -69,6 +70,15 @@ public class BlobStorageService : IBlobStorageService
         }
 
         return photosEntity;
+    }
+
+    public async Task Delete(PhotosEntity photos)
+    {
+        var regex = Regex.Match(photos.Url, $@"([^/]*/[^/]*)$");
+        var blobName = regex.Groups[0].Value;
+
+        var blobClient = _blobContainerClient.GetBlobClient(blobName);
+        await blobClient.DeleteAsync();
     }
 }
 
