@@ -11,7 +11,8 @@ public static class Mapper
         return new CityDTO
         {
             Id = city.Id,
-            Name = city.Name
+            Name = city.Name,
+            Country = city.Country
         };
     }
 
@@ -20,7 +21,8 @@ public static class Mapper
         return new CityEntity()
         {
             Id = city.Id,
-            Name = city.Name
+            Name = city.Name,
+            Country = city.Country
         };
     }
 

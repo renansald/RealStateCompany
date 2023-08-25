@@ -6,6 +6,7 @@ using Domain.DTOs;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,8 +33,10 @@ public class UserBusiness : IUserBusiness
             password: item.Password, role: item.Role);
     }
 
-    public async Task Update(UserDTO item)
+    public async Task Update(UserDTO item, int id)
     {
+        Validations.ValidateUpdate(id, item.Id);
+
         if (!(await _userRepository.IsUserAlreadyRegistered(item.Id)))
         {
             throw new BadRequestException("This user doesn't exist");
@@ -46,6 +49,7 @@ public class UserBusiness : IUserBusiness
 
     public async Task Delete(int id, string password)
     {
+        Validations.ValidateId(id);
         await _userRepository.Delete(id, password);
     }
 

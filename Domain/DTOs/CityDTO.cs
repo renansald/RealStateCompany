@@ -9,4 +9,7 @@ public class CityDTO
     [Required(ErrorMessage = "City name is required")]
     [StringLength(50, MinimumLength = 3)]
     public string Name { get; set; }
+
+    [Required]
+    public string Country { get; set; }
 }

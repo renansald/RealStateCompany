@@ -1,6 +1,7 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
 using Domain.Repositories;
+using Domain.Utils;
 
 namespace Domain.Business.PropertyType;
 
@@ -20,8 +21,10 @@ public class PropertyTypeBusiness : IPropertyTypeBusiness
         return await _propertyTypeRepository.Create(propertyTypeEntity);
     }
 
-    public async Task Update(PropertyTypeDTO item)
+    public async Task Update(PropertyTypeDTO item, int id)
     {
+        Validations.ValidateUpdate(id, item.Id);
+
         var propertyTypeEntity = item.ConvertFromDto();
 
         await _propertyTypeRepository.Update(propertyTypeEntity);
@@ -29,11 +32,13 @@ public class PropertyTypeBusiness : IPropertyTypeBusiness
 
     public async Task Delete(int id)
     {
+        Validations.ValidateId(id);
         await _propertyTypeRepository.DeleteById(id);
     }
 
     public async Task<PropertyTypeDTO> GetById(int id)
     {
+        Validations.ValidateId(id);
         var propertyTypeEntity = await _propertyTypeRepository.GetById(id);
         return propertyTypeEntity.ConvertToDto();
     }

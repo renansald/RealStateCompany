@@ -27,11 +27,6 @@ public class FurnishingType : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
             var furnishingType = await _furnishingTypeBusiness.GetById(id);
 
             return Ok(furnishingType);
@@ -101,10 +96,6 @@ public class FurnishingType : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
 
             await _furnishingTypeBusiness.Delete(id);
 
@@ -134,9 +125,8 @@ public class FurnishingType : ControllerBase
     {
         try
         {
-            if (id <= 0 || id != item.Id) throw new BadRequestException("Invalid Id");
 
-            await _furnishingTypeBusiness.Update(item);
+            await _furnishingTypeBusiness.Update(item, id);
 
             return Ok();
         }

@@ -70,12 +70,7 @@ public class PropertyType : ControllerBase
     {
         try
         {
-            if (!id.Equals(propertyType.Id))
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
-            await _propertyTypeBusiness.Update(propertyType);
+            await _propertyTypeBusiness.Update(propertyType, id);
 
             return Ok();
         }
@@ -99,11 +94,6 @@ public class PropertyType : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
             var projectType = await _propertyTypeBusiness.GetById(id);
 
             return Ok(projectType);

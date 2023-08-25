@@ -67,12 +67,8 @@ namespace API.Controllers
         {
             try
             {
-                if (!user.Id.Equals(id))
-                {
-                    throw new BadRequestException("Invalid id");
-                }
 
-                await _userBusiness.Update(user);
+                await _userBusiness.Update(user, id);
 
                 return Ok();
             }

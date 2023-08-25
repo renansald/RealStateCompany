@@ -26,11 +26,6 @@ public class Photos : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
             var items = await _photosBusiness.Upload(files, id);
 
             return Ok(items);
@@ -54,11 +49,6 @@ public class Photos : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
             await _photosBusiness.Delete(id);
             
             return Ok();
@@ -86,11 +76,6 @@ public class Photos : ControllerBase
     {
         try
         {
-            if (propertyId <= 0)
-            {
-                throw new BadRequestException("Invalid Property Id");
-            }
-
             var photos = _photosBusiness.GetPhotos(propertyId);
             return Ok(photos);
         }
@@ -117,11 +102,6 @@ public class Photos : ControllerBase
     {
         try
         {
-            if (id <= 0)
-            {
-                throw new BadRequestException("Invalid Id");
-            }
-
             await _photosBusiness.SetPrimary(id);
             return Ok();
         }

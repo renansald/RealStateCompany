@@ -29,6 +29,10 @@ namespace RealStateCompany.Controllers
             {
                 return Ok(await _cityBusiness.GetById(id));
             }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new {message = ex.Message});
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
@@ -46,9 +50,12 @@ namespace RealStateCompany.Controllers
         {
             try
             {
-
                 await _cityBusiness.Delete(id);
                 return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (NotFoundException ex)
             {
@@ -77,14 +84,22 @@ namespace RealStateCompany.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}/update")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update([FromBody] CityDTO city)
+        public async Task<IActionResult> Update([FromBody] CityDTO city, int id)
         {
             try
             {
-                await _cityBusiness.Update(city);
+                await _cityBusiness.Update(city, id);
                 return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {

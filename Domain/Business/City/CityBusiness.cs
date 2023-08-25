@@ -1,6 +1,8 @@
 ﻿using Domain.Business.Interfaces;
 using Domain.DTOs;
+using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.Utils;
 
 namespace Domain.Business.City;
 
@@ -20,19 +22,24 @@ public class CityBusiness : ICityBusiness
         return await _cityRepository.Create(cityEntity); ;
     }
 
-    public async Task Update(CityDTO item)
+    public async Task Update(CityDTO item, int id)
     {
+        Validations.ValidateUpdate(id, item.Id);
         var cityEntity = item.ConvertFromDto();
         await _cityRepository.Update(cityEntity);
     }
 
     public async Task Delete(int id)
     {
+        Validations.ValidateId(id);
+
         await _cityRepository.DeleteById(id);
     }
 
     public async Task<CityDTO> GetById(int id)
     {
+        Validations.ValidateId(id);
+
         var city = await _cityRepository.GetById(id);
         return city.ConvertToDto();
     }
